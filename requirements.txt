@@ -1,0 +1,8 @@
+aiohttp
+fastapi
+uvicorn
+nats-py
+tonsdk
+tonutils
+pydantic
+environs

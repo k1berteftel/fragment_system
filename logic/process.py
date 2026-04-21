@@ -59,10 +59,6 @@ async def _get_free_wallet(cost: float, wallet_storage: WalletStorage) -> dict |
 
 
 async def process_message(msg: SendRequest, wallet_storage: WalletStorage, queues: QueueManager) -> dict:
-    cost = await get_cost(msg.currency, msg.type)
-
-    logger.info("Choosing target wallet...")
-
     if msg.type == 'deleted_gift':
         try:
             result = await send_gift(msg.username, msg.currency)
@@ -74,6 +70,10 @@ async def process_message(msg: SendRequest, wallet_storage: WalletStorage, queue
         return {
             'status': result
         }
+
+    cost = await get_cost(msg.currency, msg.type)
+
+    logger.info("Choosing target wallet...")
 
     while True:
         result = await _get_free_wallet(cost, wallet_storage)

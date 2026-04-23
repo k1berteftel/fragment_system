@@ -84,8 +84,8 @@ class WalletManager:
     async def close(self):
         if self.ton_client and hasattr(self.ton_client, "_session"):
             try:
-                await self.ton_client.close_session()
                 await self.ton_client._session.close()
+                await self.ton_client.close_session()
             except Exception:
                 ...
 
@@ -237,7 +237,7 @@ async def buy_premium_logic(login: str, months: int, mnemonic, tonapi_key, hash,
     return clean_and_filter(results)
 
 
-async def send_request(msg: SendRequest, wallet: Wallet) -> bool:
+async def send_request(msg: SendRequest, wallet: Wallet) -> tuple[bool, str]:
     logger.info(f'Send buy-request for wallet: "{wallet.id}". Type: {msg.type}')
     mnemonic, tonapi_key, hash, cookies = wallet.mnemonic, wallet.tonapi_key, wallet.hash, wallet.cookies
     try:
@@ -262,8 +262,21 @@ async def send_request(msg: SendRequest, wallet: Wallet) -> bool:
         logger.info("Start check buy-logic tx_hash...")
         status = await check_transaction(tx_hash, tonapi_key)  # должен быть следующий вызов
     except Exception:
-        return False
-    return status
+        return False, tx_hash
+    return status, tx_hash
 
 
+async def test():
+    wallet_storage = WalletStorage()
+    wallet = wallet_storage.get_wallets()[0]
 
+    mnemonic, tonapi_key, hash, cookies = wallet.mnemonic, wallet.tonapi_key, wallet.hash, wallet.cookies
+    try:
+        data = await buy_stars_logic("@farion", 50, mnemonic, tonapi_key, hash, cookies.to_dict())
+    except Exception as err:
+        logger.error(f'Error during buy logic: {err}')
+        raise
+    print(data)
+
+
+asyncio.run(test())

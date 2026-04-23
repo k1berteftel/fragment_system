@@ -20,7 +20,8 @@ def polling_task(task_id, queues: QueueManager) -> dict | None:
             if task.get('status') == AggregatorStatus.COMPLETED.value:
                 queues.del_task(task_id)
                 return {
-                    'status': True
+                    'status': True,
+                    'tx_hash': task.get('tx_hash')
                 }
             if task.get('status') == AggregatorStatus.FAILED.value:
                 return {

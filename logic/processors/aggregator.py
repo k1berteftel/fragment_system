@@ -135,6 +135,7 @@ class QueueManager:
                 continue
 
             task['status'] = AggregatorStatus.COMPLETED.value
+            task['tx_hash'] = transaction.get('tx_hash', None)
             self._update_task(task)
             await asyncio.sleep(3)
 

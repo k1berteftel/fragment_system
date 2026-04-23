@@ -68,16 +68,19 @@ async def process_send(resp: Request, msg: SendRequest):
         logger.error(f'Critical error during transaction execute: {err}')
         return {
             'ok': False,
+            'tx_hash': None,
             'message': err
         }
     if not result.get('status'):
         logger.error(f'Failed process message: {result.get("message")}')
         return {
             'ok': False,
+            'tx_hash': result.get('tx_hash', None),
             'message': result.get("message")
         }
     return {
         'ok': True,
+        'tx_hash': result.get('tx_hash', None),
         'message': ''
     }
 

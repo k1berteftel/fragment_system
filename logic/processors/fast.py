@@ -31,7 +31,7 @@ async def process_fastlane(msg: SendRequest, wallet: Wallet, wallet_storage: Wal
                 'message': error_message
             }
         try:
-            status = await send_request(msg, wallet)
+            status, tx_hash = await send_request(msg, wallet)
             break
         except Exception as err:
             logger.error(f'Attempt: {counter}. Error: {err}')
@@ -42,5 +42,6 @@ async def process_fastlane(msg: SendRequest, wallet: Wallet, wallet_storage: Wal
     await wallet_storage.update_wallet_balance(wallet.id, wallet.tonapi_key, wallet.mnemonic)
     asyncio.create_task(delay_set_wallet_status(wallet.id, wallet_storage))
     return {
-        'status': status
+        'status': status,
+        'tx_hash': tx_hash
     }

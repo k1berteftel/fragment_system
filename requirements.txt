@@ -18,6 +18,7 @@ fastapi==0.129.0
 faststream==0.6.6
 frozenlist==1.8.0
 h11==0.16.0
+httpx
 idna==3.11
 Kurigram==2.2.22
 marshmallow==4.2.2
@@ -38,6 +39,7 @@ setuptools==82.0.0
 starlette==0.52.1
 tonsdk==1.0.15
 tonutils==0.5.1
+ton-core
 typing-inspection==0.4.2
 typing_extensions==4.15.0
 urllib3==2.6.3

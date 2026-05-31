@@ -8,7 +8,7 @@ from typing import Literal
 import tonutils.client
 import tonutils.wallet
 
-from models import Wallet
+from sys_types import Wallet
 
 
 logger = logging.getLogger(__name__)

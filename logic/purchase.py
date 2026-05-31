@@ -28,7 +28,7 @@ from sys_types import (
     EvmPaymentResult,
     SendRequest
 )
-from wallets.manager import WalletStorage
+from logic.wallets.manager import WalletStorage
 
 from utils.transactions import check_transaction
 from utils.http import build_headers, fetch_fragment_hash, post_FragmentAPI

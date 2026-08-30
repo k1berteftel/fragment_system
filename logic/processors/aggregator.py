@@ -61,6 +61,14 @@ class QueueManager:
                     collected_wallets.append(wallet)
 
             collected_wallets.sort(key=lambda x: x.balance)
+            if not collected_wallets:
+                logger.error('No wallets to use in aggregate')
+                task['status'] = AggregatorStatus.PENDING.value
+                self._update_task(task)
+                logger.debug('Wait for 3 sec before continue')
+                await asyncio.sleep(3)
+                continue
+
             target_wallet = collected_wallets.pop(0)
 
             logger.info(f'Target wallet balance: {target_wallet.balance}')

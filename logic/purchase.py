@@ -401,5 +401,5 @@ async def test(currency: int, username: str, msg_type: str):
     return status, tx_hash
 
 
-print(asyncio.run(test(50, '@Leggit_dev', 'stars')))
+#print(asyncio.run(test(50, '@Leggit_dev', 'stars')))
 

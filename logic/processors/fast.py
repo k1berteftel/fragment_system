@@ -44,7 +44,7 @@ async def process_fastlane(msg: SendRequest, wallet: Wallet, wallet_storage: Wal
     logger.info(f'Send request executed successfully. Status: {status}')
     await wallet_storage.update_wallet_balance(wallet.id, wallet.tonapi_key, wallet.mnemonic)
     if status:
-        await wallet_storage.set_cooldown(wallet.id, 15)
+        wallet_storage.set_cooldown(wallet.id, 15)
     asyncio.create_task(delay_set_wallet_status(wallet.id, wallet_storage))
     return {
         'status': status,

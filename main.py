@@ -102,6 +102,7 @@ async def main():
     wallet_storage = WalletStorage()
     queue_manager = QueueManager(wallet_storage)
     #print(config.wallet.seed_phrase)
+    await wallet_storage.update_wallets()
     await queue_manager.init_queue()
 
     app.state.wallets = wallet_storage

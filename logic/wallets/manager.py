@@ -90,3 +90,9 @@ class WalletStorage:
         wallets[wallet_id]['status'] = status
         self._update_file(wallets)
 
+    async def update_wallets(self):
+        wallets = self.get_wallets()
+        for wallet in wallets:
+            await self.update_wallet_balance(wallet.id, wallet.tonapi_key, wallet.mnemonic)
+            self.set_wallet_status(wallet.id, 'free')
+

@@ -3,7 +3,7 @@ import asyncio
 
 from logic.wallets.manager import WalletStorage
 from logic.purchase import send_request
-from models import SendRequest, Wallet
+from sys_types import SendRequest, Wallet
 
 
 logger = logging.getLogger(__name__)
@@ -12,6 +12,8 @@ logger = logging.getLogger(__name__)
 async def delay_set_wallet_status(wallet_id: str, wallet_storage: WalletStorage):
     await asyncio.sleep(2)
     wallet_storage.set_wallet_status(wallet_id, 'free')
+    await asyncio.sleep(13)
+    wallet_storage.set_cooldown(wallet_id, None)
 
 
 async def process_fastlane(msg: SendRequest, wallet: Wallet, wallet_storage: WalletStorage):
@@ -26,6 +28,7 @@ async def process_fastlane(msg: SendRequest, wallet: Wallet, wallet_storage: Wal
         if counter >= 2:
             logger.warning('Failed to process fastlane. Attempts are over')
             wallet_storage.set_wallet_status(wallet.id, 'free')
+            wallet_storage.set_cooldown(wallet.id, 15)
             return {
                 'status': False,
                 'message': error_message
@@ -40,6 +43,8 @@ async def process_fastlane(msg: SendRequest, wallet: Wallet, wallet_storage: Wal
             await asyncio.sleep(1.5)
     logger.info(f'Send request executed successfully. Status: {status}')
     await wallet_storage.update_wallet_balance(wallet.id, wallet.tonapi_key, wallet.mnemonic)
+    if status:
+        await wallet_storage.set_cooldown(wallet.id, 15)
     asyncio.create_task(delay_set_wallet_status(wallet.id, wallet_storage))
     return {
         'status': status,

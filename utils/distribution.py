@@ -1,6 +1,6 @@
 import logging
 from typing import List, Dict
-from models import Wallet
+from sys_types import Wallet
 
 logger = logging.getLogger(__name__)
 

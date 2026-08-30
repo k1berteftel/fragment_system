@@ -9,9 +9,9 @@ import uuid
 
 from logic.wallets.manager import WalletStorage
 from logic.processors.fast import process_fastlane
-from models import SendRequest, Wallet, AggregatorStatus
 from utils.transactions import collect_funds_from_seeds_string
 from utils.distribution import distribute_collection
+from sys_types import SendRequest, Wallet, AggregatorStatus
 
 
 RESERVE = 0.1

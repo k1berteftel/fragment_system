@@ -41,4 +41,5 @@ from sys_types.models import (
     EvmPaymentResult,
     EvmInvoice,
     TransactionResult,
+    AggregatorStatus
 )

@@ -1,3 +1,4 @@
+import time
 from typing import Literal
 from dataclasses import dataclass
 from datetime import datetime
@@ -212,6 +213,18 @@ class Wallet:
 
     created_at: datetime
 
+    cooldown_until: float | None = None  # Только это добавили
+
+    @property
+    def is_on_cooldown(self) -> bool:
+        return self.cooldown_until is not None and time.time() < self.cooldown_until
+
+    def set_cooldown(self, seconds: int):
+        self.cooldown_until = time.time() + seconds
+
+    def clear_cooldown(self):
+        self.cooldown_until = None
+
     def to_dict(self) -> dict:
         return {
             "data": {
@@ -232,7 +245,8 @@ class Wallet:
                 }
             },
             "status": self.status,
-            "balance": self.balance
+            "balance": self.balance,
+            "cooldown_until": self.cooldown_until  # Добавили
         }
 
     @classmethod
@@ -255,7 +269,8 @@ class Wallet:
             ),
             status=wallet.get('status'),
             balance=wallet.get('balance'),
-            created_at=datetime.fromisoformat(data.get('created_at'))
+            created_at=datetime.fromisoformat(data.get('created_at')),
+            cooldown_until=wallet.get('cooldown_until')
         )
 
 

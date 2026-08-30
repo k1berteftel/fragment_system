@@ -4,12 +4,12 @@ import logging
 import uvicorn
 from fastapi import FastAPI, Request, HTTPException, Response
 
-from models import SendRequest
 from config.config_data import Config, load_config
 from logic.process import process_message
 from logic.processors.aggregator import QueueManager
 from logic.distribute import distribute_endpoint
 from logic.wallets.manager import WalletStorage
+from sys_types import SendRequest
 
 
 app = FastAPI()

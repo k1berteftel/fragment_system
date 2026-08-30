@@ -152,10 +152,10 @@ async def purchase_stars(
                 f"Unsupported payment_method flow: {payment_method}"
             )
 
-        print(f'result before execute transaction: {transaction}')
-        print(transaction['transaction']['messages'][0])
-        print(transaction['transaction']['messages'][0]['amount'])
-        print(float(transaction['transaction']['messages'][0].get('amount')) / 1_000_000_000)
+        # print(f'result before execute transaction: {transaction}')
+        # print(transaction['transaction']['messages'][0])
+        # print(transaction['transaction']['messages'][0]['amount'])
+        # print(float(transaction['transaction']['messages'][0].get('amount')) / 1_000_000_000)
         tx_result = await execute_transaction(wallet, transaction)
 
         if tx_result.boc and req_id:
@@ -401,5 +401,5 @@ async def test(currency: int, username: str, msg_type: str):
     return status, tx_hash
 
 
-# print(asyncio.run(test(50, '@Leggit_dev', 'stars')))
+print(asyncio.run(test(50, '@Leggit_dev', 'stars')))
 

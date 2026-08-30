@@ -48,10 +48,34 @@ class WalletStorage:
                 await asyncio.sleep(1)
         return None
 
+    def set_cooldown(self, wallet_id: str, seconds: int | None = 15):
+        wallet = self.get_wallet(wallet_id)
+        if wallet:
+            if seconds is None:
+                wallet.clear_cooldown()
+            else:
+                wallet.set_cooldown(seconds)
+            self.update_wallet(wallet)
+
+    def is_on_cooldown(self, wallet_id: str) -> bool:
+        wallet = self.get_wallet(wallet_id)
+        return wallet.is_on_cooldown if wallet else False
+
+    def get_wallet(self, wallet_id: str) -> Wallet | None:
+        wallets = self._read_file()
+        wallet_data = wallets.get(wallet_id)
+        return Wallet.from_dict(wallet_id, wallet_data) if wallet_data else None
+
     def get_wallets(self) -> list[Wallet]:
         wallets = self._read_file()
         wallets = [Wallet.from_dict(wallet_id, wallet) for wallet_id, wallet in wallets.items()]
         return wallets
+
+    def update_wallet(self, wallet: Wallet):
+        """Обновляет кошелек в файле"""
+        wallets = self._read_file()
+        wallets[wallet.id] = wallet.to_dict()
+        self._update_file(wallets)
 
     async def update_wallet_balance(self, wallet_id: str, tonapi_key: str, mnemonic: list[str]):
         balance = await self._get_wallet_balance(tonapi_key, mnemonic)

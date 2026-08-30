@@ -2,12 +2,13 @@ import asyncio
 import random
 import logging
 
-from models import SendRequest, Wallet, AggregatorStatus
+from sys_types import SendRequest, Wallet, AggregatorStatus
 from logic.wallets.manager import WalletStorage
 from logic.processors.fast import process_fastlane
 from logic.processors.aggregator import QueueManager
 from logic.send_gift import send_gift
 from utils.fragment_api import get_cost
+from utils.decorators import retry_decorator
 
 
 logger = logging.getLogger(__name__)
@@ -51,7 +52,7 @@ async def _get_free_wallet(cost: float, wallet_storage: WalletStorage) -> dict |
             return None
     free_wallets = []
     for wallet in wallets:
-        if wallet.status == 'free' and wallet.balance > cost:
+        if wallet.status == 'free' and not wallet.is_on_cooldown and wallet.balance > cost:
             free_wallets.append(wallet)
     if not free_wallets:
         await asyncio.sleep(2.5)
@@ -59,6 +60,7 @@ async def _get_free_wallet(cost: float, wallet_storage: WalletStorage) -> dict |
     return max(free_wallets, key=lambda x: x.balance)
 
 
+@retry_decorator()
 async def process_message(msg: SendRequest, wallet_storage: WalletStorage, queues: QueueManager) -> dict:
     if msg.type == 'deleted_gift':
         try:
